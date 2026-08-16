@@ -1,0 +1,228 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource/vazirmatn/400.css";
+@import "@fontsource/vazirmatn/500.css";
+@import "@fontsource/vazirmatn/600.css";
+@import "@fontsource/vazirmatn/700.css";
+@import "@fontsource/vazirmatn/800.css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.875rem;
+
+  /* ===== کلینیک ارتوپدی فنی — پالت آبی مدرن حول #3861fb ===== */
+  --primary: #3861fb;
+  --primary-foreground: #ffffff;
+
+  --secondary: #f1f3f9;
+  --secondary-foreground: #1e293b;
+
+  --accent: #eef2ff;
+  --accent-foreground: #3861fb;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  --success: #10b981;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #451a03;
+
+  --background: #f5f6fb;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  --muted: #f1f3f9;
+  --muted-foreground: #64748b;
+  --border: #e6e9f2;
+  --input: #e6e9f2;
+  --ring: #3861fb;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #334155;
+  --sidebar-primary: #3861fb;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef2ff;
+  --sidebar-accent-foreground: #3861fb;
+  --sidebar-border: #e6e9f2;
+  --sidebar-ring: #3861fb;
+
+  --chart-1: #3861fb;
+  --chart-2: #10b981;
+  --chart-3: #8b5cf6;
+  --chart-4: #f59e0b;
+  --chart-5: #ef4444;
+}
+
+.dark {
+  --primary: #5a7bff;
+  --primary-foreground: #ffffff;
+
+  --secondary: #1e293b;
+  --secondary-foreground: #e2e8f0;
+
+  --accent: #1e2a4a;
+  --accent-foreground: #a5b4fc;
+
+  --destructive: #f87171;
+  --destructive-foreground: #450a0a;
+
+  --success: #34d399;
+  --success-foreground: #022c22;
+  --warning: #fbbf24;
+  --warning-foreground: #451a03;
+
+  --background: #0b1020;
+  --foreground: #e2e8f0;
+  --card: #111728;
+  --card-foreground: #e2e8f0;
+  --popover: #111728;
+  --popover-foreground: #e2e8f0;
+
+  --muted: #1a2138;
+  --muted-foreground: #94a3b8;
+  --border: #1e2740;
+  --input: #1e2740;
+  --ring: #5a7bff;
+
+  --sidebar: #0d1322;
+  --sidebar-foreground: #cbd5e1;
+  --sidebar-primary: #3861fb;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1a2240;
+  --sidebar-accent-foreground: #a5b4fc;
+  --sidebar-border: #1e2740;
+  --sidebar-ring: #5a7bff;
+}
+
+@theme {
+  /* مقیاس کامل primary حول #3861fb برای گرادیان و افکت‌ها */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #dfe6ff;
+  --color-primary-200: #c5d1ff;
+  --color-primary-300: #a1b4ff;
+  --color-primary-400: #7a8fff;
+  --color-primary-500: #3861fb;
+  --color-primary-600: #2748e0;
+  --color-primary-700: #2038b8;
+  --color-primary-800: #1d3090;
+  --color-primary-900: #1b2a72;
+  --color-primary-950: #131b4d;
+}
+
+@theme inline {
+  --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Vazirmatn", ui-monospace, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 4px 16px rgb(15 23 42 / 0.06);
+  --shadow-card: 0 1px 3px rgb(15 23 42 / 0.05), 0 8px 24px rgb(15 23 42 / 0.06);
+  --shadow-glow: 0 0 0 1px rgb(56 97 251 / 0.12), 0 8px 32px rgb(56 97 251 / 0.22);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  ::selection {
+    background: rgb(56 97 251 / 0.18);
+  }
+}
+
+@layer utilities {
+  /* گرادیان اصلی برند */
+  .gradient-primary {
+    background-image: linear-gradient(135deg, #3861fb 0%, #5a7bff 50%, #2748e0 100%);
+  }
+
+  /* متن گرادیانی */
+  .text-gradient {
+    background-image: linear-gradient(135deg, #3861fb, #7a8fff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* سطح شیشه‌ای */
+  .glass {
+    background: rgb(255 255 255 / 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .dark .glass {
+    background: rgb(17 23 40 / 0.7);
+  }
+
+  /* شِیْدوی نرم */
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* هالهٔ فوکوس */
+  .ring-soft {
+    box-shadow: 0 0 0 4px rgb(56 97 251 / 0.14);
+  }
+}
+
+/* اعداد لاتین برای محتوای مالی — خوانایی بهتر در محاسبات */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
