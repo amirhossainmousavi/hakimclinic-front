@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# پنل کلینیک ارتوپدی فنی حکیم — فرانت‌اند
 
-## Getting Started
+پنل مدیریت کلینیک — RTL فارسی، React 19، Next.js (App Router)، TanStack Query، shadcn/ui.
 
-First, run the development server:
+## استک
+
+| بخش | انتخاب |
+|---|---|
+| فریم‌ورک | Next.js 16 (App Router) — Client-First |
+| زبان | TypeScript |
+| استایل | Tailwind CSS 4 |
+| دیزاین سیستم | shadcn/ui (روی Radix) — سفارشی‌سازی‌شده |
+| داده/سرور استیت | TanStack Query |
+| فرم | React Hook Form + Zod |
+| Mock API | MSW (اختیاری، با `NEXT_PUBLIC_USE_MOCK`) |
+| PWA | Serwist |
+| جهت | RTL کامل، فونت Vazirmatn |
+
+## شروع کار
 
 ```bash
+npm install
+cp .env.example .env.local   # سپس مقادیر را تنظیم کنید
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+پیش‌فرض‌ها: سرویس روی `http://localhost:3000`، backend پیش‌فرض `/api/v1` (proxy شده توسط Next.js). اگر backend جدا باشد، `NEXT_PUBLIC_API_URL` را روی URL مطلق بگذارید.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## متغیرهای محیطی
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| متغیر | پیش‌فرض | توضیح |
+|---|---|---|
+| `NEXT_PUBLIC_API_URL` | `/api/v1` | Base URL بک‌اند؛ مسیر نسبی از طریق proxy Next.js |
+| `NEXT_PUBLIC_USE_MOCK` | `false` | `true` → استفاده از MSW mocks (توسعه/دمو) |
+| `NEXT_PUBLIC_ENABLE_DEMO_ACCOUNTS` | `false` | `true` → نمایش حساب‌های آزمایشی روی صفحه ورود. **فقط** در staging/demo؛ در production خاموش بماند |
 
-## Learn More
+## ساختار
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/                   # صفحات + layout (RTL)، favicon.ico، icon.svg، manifest.ts، sw.ts
+    (auth)/login/
+    (dashboard)/         # dashboard, patients, appointments, invoices, insurances,
+                         # services, tariffs, reports/revenue, expenses, secretaries,
+                         # notifications, settings
+  components/            # ui (shadcn) + design-system + skeletons
+  features/<module>/     # api.ts, hooks.ts, types.ts و کامپوننت‌های هر ماژول
+  lib/                   # api-client.ts (fetch wrapper + توکن + refresh)، query-client، jalali، roles، utils
+  mocks/                 # MSW handlers + fixtures
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+قانون: کامپوننت صفحه هرگز مستقیم `fetch` صدا نمی‌زند؛ از `features/<module>/hooks.ts` استفاده می‌کند که خودش از `lib/api-client.ts` عبور می‌کند.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## داده و احراز هویت
 
-## Deploy on Vercel
+- توکن‌ها در `localStorage` (`clinic_access_token`, `clinic_refresh_token`) نگهداری می‌شوند.
+- `apiFetch` بعد از 401 یک‌بار تلاش refresh می‌کند؛ در صورت شکست → ریدایرکت به `/login`.
+- خطای `success:false` به `ApiError` تبدیل می‌شود.
+- URL فایل‌های محلی (`/uploads/...`) به‌صورت مطلق ساخته و توکن access به آن append می‌شود (`?token=...`) چون `<img>/<video>` هدر Authorization نمی‌فرستند — در `features/patients/components/PatientDetailDialog.tsx` (`fileSrc`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## اسکریپت‌ها
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run dev        # سرور توسعه
+npm run build      # build production (webpack)
+npm run start      # اجرای build شده
+npm run lint       # eslint
+```
+
+## مستندات بیشتر
+
+- معماری فرانت‌اند: [`clinic-panel-frontend-architecture.md`](clinic-panel-frontend-architecture.md)
+- معماری بک‌اند: [`clinic-panel-backend-architecture.md`](clinic-panel-backend-architecture.md)
