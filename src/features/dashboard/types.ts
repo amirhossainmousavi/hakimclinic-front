@@ -8,9 +8,9 @@ export interface DashboardSummary {
   todayAdmissions: number;
   todayAppointments: number;
   readyForDelivery: number;
-  /** مجموع درآمد نهایی هر روز — ۳۰ روز اخیر */
+  /** Total final revenue per day — last 30 days */
   revenue30d: { date: string; total: number }[];
-  /** درصد رشد/افت نسبت به ۳۰ روز قبل؛ علامت‌دار. null وقتی داده قبلی نباشد */
+  /** Growth/decline percent vs the previous 30 days; signed. null when there is no earlier data */
   revenueGrowthPercent: number | null;
   alerts: DashboardAlert[];
 }

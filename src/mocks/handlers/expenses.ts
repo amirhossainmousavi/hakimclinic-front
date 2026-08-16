@@ -12,20 +12,20 @@ const error = (code: string, message: string, status: number, details: unknown =
 
 const MONTHS_FA = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور"];
 
-/** مراکزی که منشی به آن‌ها دسترسی دارد؛ برای مدیر null (همه مراکز) */
+/** Centers the secretary has access to; null for manager (all centers) */
 function allowedPlaces(): string[] | null {
   const user = getCurrentUser();
   if (!user || user.role === "manager") return null;
   return user.scopes ?? [];
 }
 
-/** کلید روز شمسی «ماه/روز» برای نقطهٔ نمودار */
+/** Jalali "month/day" key for a chart point */
 function monthDayKey(date: Date): string {
   const j = toJalali(date);
   return `${j.month + 1}/${j.day}`;
 }
 
-/** طول ماه شمسی (ماه ۰-پایه) */
+/** Jalali month length (0-based month) */
 function jalaliMonthLength(year: number, month: number): number {
   const next = toGregorian({ year, month: month + 1, day: 1 });
   const cur = toGregorian({ year, month, day: 1 });
@@ -87,7 +87,7 @@ export const expenseHandlers = [
     const placeId = typeof body.admissionPlaceId === "string" ? body.admissionPlaceId : null;
     const place = admissionPlacesFixture.find((p) => p.id === placeId);
     const scopes = allowedPlaces();
-    // منشی فقط برای مراکز خودش می‌تواند ثبت کند
+    // A secretary can only register for their own centers
     if (scopes && (!placeId || !scopes.includes(placeId))) {
       return error("FORBIDDEN", "دسترسی به این مرکز ندارید", 403);
     }
@@ -145,7 +145,7 @@ export const expenseHandlers = [
     return HttpResponse.json({ success: true, data });
   }),
 
-  // نمودار هزینه‌ها — دو خط: ماه جاری + ماه قبل (فقط مدیر)
+  // Expenses chart — two lines: current month + previous month (manager only)
   http.get("/api/v1/expenses/monthly-chart", async ({ request }) => {
     await delay(LATENCY());
     const url = new URL(request.url);

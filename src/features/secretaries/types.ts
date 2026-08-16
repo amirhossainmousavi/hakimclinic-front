@@ -42,7 +42,7 @@ export const SECRETARY_PERMISSION_LABELS: Record<SecretaryPermissionKey, string>
   expenses: "هزینه‌ها",
 };
 
-/** دسترسی‌های پیش‌فرض هر منشی — مطابق بک‌اند */
+/** Default permissions for each secretary — matching the backend */
 export const DEFAULT_SECRETARY_PERMISSIONS: SecretaryPermissionKey[] = [
   "dashboard",
   "patients",

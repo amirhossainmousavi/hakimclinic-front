@@ -16,7 +16,7 @@ export interface Patient {
   fileNumber: string;
   admissionPlaceId: string | null;
   admissionPlaceName: string | null;
-  /** آیدی کاربری که بیمار را پذیرش کرده (در mock از توکن؛ در بک‌اند از sub) */
+  /** User id that admitted the patient (from the token in the mock; from sub in the backend) */
   admittedByUserId: string | null;
   admissionType: AdmissionType;
   insuranceId: string | null;
@@ -82,7 +82,7 @@ export interface PatientService {
 export interface AttachPatientServiceInput {
   serviceId: string;
   serviceDate?: string;
-  /** فقط برای نمایش در UI؛ به سرور ارسال نمی‌شود */
+  /** Display only in the UI; not sent to the server */
   serviceName?: string;
   serviceCode?: string;
   unitPrice?: number;

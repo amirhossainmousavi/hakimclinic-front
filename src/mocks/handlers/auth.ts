@@ -4,7 +4,7 @@ import { secretariesFixture } from "@/mocks/fixtures/secretaries";
 
 const LATENCY = () => Math.floor(Math.random() * 400) + 300;
 
-// شبیه‌سازی JWT واقعی — این بخش فقط برای mock؛ در بک‌اند واقعی توکن از سرور می‌آید
+// Simulate a real JWT — this part is mock-only; in the real backend the token comes from the server
 function signToken(payload: object): string {
   const header = btoa(JSON.stringify({ alg: "none", typ: "JWT" })).replace(/=+$/, "");
   const body = btoa(JSON.stringify(payload)).replace(/=+$/, "");
@@ -12,7 +12,7 @@ function signToken(payload: object): string {
 }
 
 const USERS: Record<string, AuthUser> = {
-  // مدیر: کدملی 1111111111
+  // Manager: national code 1111111111
   "1111111111": {
     id: "u-manager",
     fullName: "مدیر کلینیک",
@@ -20,7 +20,7 @@ const USERS: Record<string, AuthUser> = {
     phone: "09120000000",
     role: "manager",
   },
-  // منشی: کدملی 2222222222
+  // Secretary: national code 2222222222
   "2222222222": {
     id: "u-sec2",
     fullName: "منشی پذیرش",
@@ -28,7 +28,7 @@ const USERS: Record<string, AuthUser> = {
     phone: "09220000000",
     role: "secretary",
   },
-  // منشی: کدملی 3333333333
+  // Secretary: national code 3333333333
   "3333333333": {
     id: "u-sec1",
     fullName: "منشی پیگیری",
@@ -36,7 +36,7 @@ const USERS: Record<string, AuthUser> = {
     phone: "09330000000",
     role: "secretary",
   },
-  // منشی: کدملی 4444444444
+  // Secretary: national code 4444444444
   "4444444444": {
     id: "u-sec3",
     fullName: "منشی پذیرش",
@@ -53,7 +53,7 @@ const DEMO_PASSWORDS: Record<string, string> = {
   "4444444444": "09440000000",
 };
 
-/** scope و دسترسی‌های منشی از فیکسچر — mock معادل بک‌اند که در JWT می‌گذارد */
+/** Secretary scope and permissions from the fixture — mock equivalent of what the backend puts in the JWT */
 function secretaryClaims(nationalCode: string) {
   const sec = secretariesFixture.find((s) => s.nationalCode === nationalCode);
   return {

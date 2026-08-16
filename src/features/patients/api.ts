@@ -53,7 +53,7 @@ export async function updatePatientStatus(
   });
 }
 
-/** آپلود multipart — بدون هدر Content-Type تا مرورگر boundary خودش را بگذارد */
+/** Multipart upload — no Content-Type header so the browser sets its own boundary */
 export async function uploadPatientFile(
   patientId: string,
   file: File

@@ -1,6 +1,6 @@
 export type Role = "manager" | "secretary";
 
-/** قابلیت‌های پنل که مدیر برای هر منشی فعال/غیرفعال می‌کند */
+/** Panel capabilities the manager enables/disables for each secretary */
 export type SecretaryPermissionKey =
   | "dashboard"
   | "patients"

@@ -23,7 +23,7 @@ const STATUSES: Patient["status"][] = [
   "delivered",
 ];
 
-/** آیدی کاربران mock که می‌توانند پذیرش ثبت کنند */
+/** Mock user ids that can register admissions */
 const ADMITTERS = ["u-manager", "u-sec1", "u-sec2", "u-sec3"];
 
 function makePatient(index: number): Patient {

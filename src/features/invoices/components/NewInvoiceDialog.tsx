@@ -65,13 +65,13 @@ export function NewInvoiceDialog({
   const [prepaidAmount, setPrepaidAmount] = useState("");
   const [discounts, setDiscounts] = useState<Record<string, DiscountRow>>({});
 
-  // --- مرحله ۱: سرچ بیمار (نام یا کد ملی) ---
+  // --- Step 1: Search patient (name or national code) ---
   const [query, setQuery] = useState("");
   const [debounced, setDebounced] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef<HTMLButtonElement>(null);
 
-  // --- مرحله ۲: سرچ روز دریافت خدمت ---
+  // --- Step 2: Search the day the service was received ---
   const [dayQuery, setDayQuery] = useState("");
   const [daySearchOpen, setDaySearchOpen] = useState(false);
   const daySearchRef = useRef<HTMLButtonElement>(null);
@@ -86,7 +86,7 @@ export function NewInvoiceDialog({
     limit: 100,
   });
 
-  // --- مرحله ۲: خدمات بیمار (برای لیست روزها) ---
+  // --- Step 2: Patient services (for the day list) ---
   const { data: patientServices, isLoading: servicesLoading } = usePatientServices(
     patient?.id ?? null
   );
@@ -230,7 +230,7 @@ export function NewInvoiceDialog({
           </DialogDescription>
         </DialogHeader>
 
-        {/* مرحله ۱: انتخاب بیمار */}
+        {/* Step 1: Select patient */}
         {stage === "patient" && (
           <div className="space-y-4">
             <div className="space-y-2">
@@ -304,7 +304,7 @@ export function NewInvoiceDialog({
           </div>
         )}
 
-        {/* مرحله ۲: انتخاب روز */}
+        {/* Step 2: Select day */}
         {stage === "day" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between gap-2 rounded-xl border bg-muted/40 px-3 py-2 text-sm">
@@ -412,7 +412,7 @@ export function NewInvoiceDialog({
           </div>
         )}
 
-        {/* مرحله ۳: خدمات روز + تنظیمات فاکتور */}
+        {/* Step 3: Day services + invoice settings */}
         {stage === "services" && (
           <div className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">

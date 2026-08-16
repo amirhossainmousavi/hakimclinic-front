@@ -16,7 +16,7 @@ interface ExpensesMonthlyChartProps {
   data: { date: string; current: number; previous: number }[];
 }
 
-/** نمودار هزینه‌ها — دو خط: ماه جاری و ماه قبل. محور X شمسی (ماه/روز). */
+/** Expenses chart — two lines: current and previous month. X axis is Jalali (month/day). */
 export function ExpensesMonthlyChart({ data }: ExpensesMonthlyChartProps) {
   if (data.length === 0) {
     return (

@@ -5,9 +5,9 @@ export interface DecodedToken {
   sub: string;
   role: Role;
   clinicId?: string;
-  /** آیدی محل‌های پذیرش که منشی در آن‌ها کار می‌کند (برای manager خالی است) */
+  /** Ids of the admission places the secretary works in (empty for manager) */
   scopes?: string[];
-  /** قابلیت‌های پنل فعال برای منشی (برای manager خالی است) */
+  /** Active panel permissions for the secretary (empty for manager) */
   permissions?: SecretaryPermissionKey[];
   exp?: number;
 }
@@ -35,7 +35,7 @@ export function hasRole(allowed: Role[] | undefined, role: Role | undefined): bo
   return allowed.includes(role);
 }
 
-/** اگر لیست دسترسی مشخص شده، فقط وقتی مجاز است که منشی آن را داشته باشد یا مدیر باشد */
+/** If a permission list is given, only allowed when the secretary has it or is a manager */
 export function hasPermission(
   permission: SecretaryPermissionKey | undefined,
   role: Role | undefined,

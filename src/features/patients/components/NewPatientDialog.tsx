@@ -110,7 +110,7 @@ export function NewPatientDialog({
         unitPrice: s.price,
       },
     ]);
-    // بعد از افزودن، تاریخ به امروز برمی‌گردد
+    // After adding, the date resets to today
     setServiceDate(new Date().toISOString().slice(0, 10));
   };
 
@@ -137,7 +137,7 @@ export function NewPatientDialog({
   });
 
   const isSubmitting = createPatient.isPending || uploadFile.isPending;
-  // دکمه فقط وقتی فعال است که هم تب اطلاعات معتبر باشد و هم حداقل یک خدمت انتخاب شده باشد
+  // The button is only enabled when both the info tab is valid and at least one service is selected
   const canSubmit =
     schema.safeParse(watch()).success && selectedServices.length > 0;
   const admissionType = watch("admissionType");
@@ -177,7 +177,7 @@ export function NewPatientDialog({
     });
 
     if (attachment) {
-      // آپلود فایل اختیاری؛ خطای آن مانع ثبت بیمار نمی‌شود
+      // File upload is optional; its failure does not block patient registration
       try {
         await uploadFile.mutateAsync({ patientId: patient.id, file: attachment.file });
       } catch {

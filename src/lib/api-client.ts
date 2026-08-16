@@ -74,7 +74,7 @@ export async function apiFetchRaw<T = unknown>(
   const url = `${BASE_URL}${path}`;
   let res = await fetch(url, { ...options, headers });
 
-  // 401 → تلاش یک‌باره refresh
+  // 401 → attempt a single refresh
   if (res.status === 401 && !path.startsWith("/auth/")) {
     if (!refreshing) {
       refreshing = refreshAccessToken().finally(() => {
@@ -86,7 +86,7 @@ export async function apiFetchRaw<T = unknown>(
       headers.set("Authorization", `Bearer ${newToken}`);
       res = await fetch(url, { ...options, headers });
     } catch {
-      /* refresh شکست خورد؛ پاسخ اصلی 401 برگردانده می‌شود */
+      /* Refresh failed; the original 401 response is returned */
     }
   }
 

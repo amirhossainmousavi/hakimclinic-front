@@ -138,7 +138,7 @@ export function PatientDetailDialog({
       patientId: patient.id,
       input: { serviceId: service.id, serviceDate },
     });
-    // بعد از افزودن، تاریخ به امروز برمی‌گردد
+    // After adding, the date resets to today
     setServiceDate(new Date().toISOString().slice(0, 10));
   };
 

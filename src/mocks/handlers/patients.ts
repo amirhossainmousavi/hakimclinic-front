@@ -28,8 +28,8 @@ function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
-// برای فلو «فاکتور جدید»: چند بیمار seeded خدمات تاریخ‌دار داشته باشند
-// تا مرحله انتخاب روز در preview قابل دیدن باشد.
+// For the "New invoice" flow: seed a few patients with dated services
+// so the day-selection step is visible in the preview.
 function seedPatientServices() {
   const serviceRows = servicesFixture.slice(0, 8);
   const dates = ["2026-08-05", "2026-08-12"];
@@ -65,7 +65,7 @@ export const patientHandlers = [
 
     let rows = patientsFixture;
 
-    // منشی فقط بیماران محل‌های کار خودش را می‌بیند (مثل بک‌اند)
+    // A secretary only sees patients from their own workplaces (like the backend)
     const currentUser = decodeToken(getAccessToken());
     if (currentUser?.role !== "manager" && currentUser?.scopes?.length) {
       rows = rows.filter((p) => p.admissionPlaceId && currentUser.scopes!.includes(p.admissionPlaceId));

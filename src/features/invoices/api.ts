@@ -64,7 +64,7 @@ export async function downloadInvoicePdf(invoiceId: string, fallbackName = "invo
       const body = await res.json();
       message = body?.error?.message ?? message;
     } catch {
-      /* بدنه JSON نیست */
+      /* Body is not JSON */
     }
     throw new Error(message);
   }

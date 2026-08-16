@@ -12,7 +12,7 @@ const LATENCY = () => Math.floor(Math.random() * 500) + 300;
 const error = (code: string, message: string, status: number, details: unknown = null) =>
   HttpResponse.json({ success: false, error: { code, message, details } }, { status });
 
-/** ورودی میانی — آیدی‌های بیمه که بعد از بازسازی به رابطه‌های کامل تبدیل می‌شوند */
+/** Intermediate input — insurance ids that become full relations after reconstruction */
 interface BuildPlaceInput {
   id?: string;
   name: string;
@@ -22,7 +22,7 @@ interface BuildPlaceInput {
   insuranceIds?: string[];
 }
 
-/** بازسازی شیء کامل محل از داده ساده — آیدی/نام بیمه را به هم وصل می‌کند */
+/** Rebuild a full place object from simple data — wires up insurance id/name */
 function buildPlace(partial: BuildPlaceInput): AdmissionPlace {
   const place = admissionPlacesFixture.find((p) => p.id === partial.id);
   const insuranceIds = partial.insuranceIds ?? place?.insurances.map((i) => i.insuranceId) ?? [];

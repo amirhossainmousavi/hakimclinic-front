@@ -53,7 +53,7 @@ export const reportHandlers = [
       },
     };
 
-    // نقاط نمودار بر اساس روز (از فاکتورهای موجود)
+    // Chart points by day (from the existing invoices)
     const byDay = new Map<string, number>();
     for (const iv of rows) {
       const day = iv.createdAt.slice(0, 10);

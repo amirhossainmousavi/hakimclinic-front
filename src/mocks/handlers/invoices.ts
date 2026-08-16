@@ -125,8 +125,8 @@ export const invoiceHandlers = [
 
   http.get("/api/v1/invoices/:id/pdf", async ({ params }) => {
     await delay(LATENCY());
-    // PDF نمونه ثابت — تولید واقعی سمت بک‌اند (Puppeteer) انجام می‌شود.
-    // فقط برای تست مسیر دانلود فرانت کافی است.
+    // Static sample PDF — real generation happens on the backend (Puppeteer).
+    // Only enough to test the frontend download path.
     const invoice = invoicesFixture.find((iv) => iv.id === params.id);
     const patientName = invoice?.patientName ?? "بیمار";
     const encoded = encodeURIComponent(`فاکتور-${patientName}.pdf`);

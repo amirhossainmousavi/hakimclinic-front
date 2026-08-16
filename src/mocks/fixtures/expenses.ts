@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker/locale/fa";
 import { admissionPlacesFixture } from "@/mocks/fixtures/admission-places";
 import type { CompanyInvoice, DailyExpense, Expense } from "@/features/expenses/types";
 
-/** مراکزی که هزینه روزانه می‌تواند داشته باشد — گردش بین سه مرکز */
+/** Centers that can have daily expenses — rotating between three centers */
 const EXPENSE_PLACES = admissionPlacesFixture;
 
 const DAILY_TITLES = [

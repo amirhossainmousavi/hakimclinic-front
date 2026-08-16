@@ -24,7 +24,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const DAY = 24 * 60 * 60 * 1000;
 
-/** روز جاری به صورت تاریخ UTC (برای تطبیق با createdAt فیکسچرها) */
+/** Current day as a UTC date (to match the fixtures' createdAt) */
 function todayUTCKey(): string {
   const d = new Date();
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
@@ -42,7 +42,7 @@ export function SecretaryDashboard() {
 
   const hasAppt = hasPermission("appointments", user?.role, user?.permissions);
 
-  // ===== سکشن ۱ — بنر اطلاعیه امروز =====
+  // ===== Section 1 — Today's announcement banner =====
   const { data: notifications, isLoading: isLoadingNotifications } = useNotifications();
   const todayNtf = useMemo(() => {
     if (!notifications) return null;
@@ -57,7 +57,7 @@ export function SecretaryDashboard() {
     );
   }, [notifications]);
 
-  // ===== سکشن ۲ — آمار =====
+  // ===== Section 2 — Stats =====
   const todayIsoStart = useMemo(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -79,7 +79,7 @@ export function SecretaryDashboard() {
   ).length;
   const readyForDelivery = patients.filter((p) => p.status === "ready_for_delivery").length;
 
-  // ===== سکشن ۳ — یادآوری فردا (فقط دسترسی نوبت) =====
+  // ===== Section 3 — Tomorrow reminder (appointments permission only) =====
   const tomorrowStart = useMemo(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -104,7 +104,7 @@ export function SecretaryDashboard() {
     });
   };
 
-  // ===== سکشن ۴ — بیماران اخیر این منشی =====
+  // ===== Section 4 — This secretary's recent patients =====
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -136,7 +136,7 @@ export function SecretaryDashboard() {
 
   return (
     <div className="space-y-6 pb-24">
-      {/* ===== سکشن ۱ — بنر اطلاعیه روز ===== */}
+      {/* ===== Section 1 — Day announcement banner ===== */}
       {todayNtf && (
         <div className="rounded-2xl gradient-primary p-4 text-white shadow-glow">
           <p className="text-xs font-medium opacity-80">اطلاعیه امروز</p>
@@ -144,7 +144,7 @@ export function SecretaryDashboard() {
         </div>
       )}
 
-      {/* ===== سکشن ۲ — آمار ===== */}
+      {/* ===== Section 2 — Stats ===== */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {isLoadingToday || isLoadingPatients ? (
           Array.from({ length: 3 }).map((_, i) => (
@@ -185,7 +185,7 @@ export function SecretaryDashboard() {
         )}
       </div>
 
-      {/* ===== سکشن ۳ — یادآوری تماس فردا (فقط دسترسی نوبت) ===== */}
+      {/* ===== Section 3 — Tomorrow call reminders (appointments permission only) ===== */}
       {hasAppt && (
         <Card>
           <CardHeader>
@@ -249,7 +249,7 @@ export function SecretaryDashboard() {
         </Card>
       )}
 
-      {/* ===== سکشن ۴ — بیماران اخیر این منشی ===== */}
+      {/* ===== Section 4 — This secretary's recent patients ===== */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base">بیماران اخیر شما (۷ روز گذشته)</CardTitle>
@@ -302,7 +302,7 @@ export function SecretaryDashboard() {
         </CardContent>
       </Card>
 
-      {/* ===== سکشن ۵ — دکمه شناور پذیرش بیمار ===== */}
+      {/* ===== Section 5 — Floating new patient admission button ===== */}
       <div className="fixed bottom-5 start-1/2 z-20 w-[calc(100%-2.5rem)] max-w-sm -translate-x-1/2 lg:start-auto lg:end-6 lg:w-auto lg:translate-x-0">
         <Button
           className="w-full shadow-xl"

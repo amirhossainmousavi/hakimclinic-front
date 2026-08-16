@@ -20,7 +20,7 @@ export const notificationsFixture: Notification[] = MESSAGES.map((msg, i) => ({
   createdByUserName: i % 2 === 0 ? "مدیر کلینیک" : "زهرا محمدی",
 }));
 
-// اطلاعیه امروز — برای بنر داشبورد منشی (mock از بک‌اند واقعی که فیلد تاریخ مجزا می‌خواهد)
+// Today's announcement — for the secretary dashboard banner (mock of a real backend that needs a separate date field)
 notificationsFixture.unshift({
   id: "ntf-today",
   message: "نوبت‌دهی امروز طبق روال عادی انجام می‌شود. یادآوری: بازبینی وضعیت بیماران در انتظار تاییدیه بیمه.",

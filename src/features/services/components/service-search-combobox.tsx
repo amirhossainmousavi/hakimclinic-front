@@ -33,7 +33,7 @@ export function ServiceSearchCombobox({
     limit: 100,
   });
 
-  // مقدار می‌تواند id یا نام خدمت باشد؛ نام‌های ذخیره‌شده ممکن است کوتاه‌تر از نام واقعی باشند
+  // The value can be a service id or name; stored names may be shorter than the real names
   const selected = data
     ? data.items.find((s) => s.id === value) ??
       data.items.find((s) => s.treatmentProcess === value) ??

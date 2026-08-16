@@ -15,13 +15,13 @@ interface RevenueAreaChartProps {
   data: { date: string; total: number }[];
 }
 
-/** محور X به صورت تاریخ شمسی — tick با کمترین عرض ممکن */
+/** X axis as a Jalali date — tick with the smallest possible width */
 function formatJalali(dateStr: string): string {
   const d = new Date(`${toEnglishDigits(dateStr)}T00:00:00`);
   if (Number.isNaN(d.getTime())) return dateStr;
-  // digits فارسی → انگلیسی تا Number نادرست نخواند
+  // Persian → English digits so Number does not misparse
   const fa = toEnglishDigits(d.toLocaleDateString("fa-IR"));
-  // فقط روز/ماه — مثلاً «۱۲/۳»
+  // Only day/month — e.g. "12/3"
   const parts = fa.split("/");
   return parts.length >= 2 ? `${Number(parts[1])}/${Number(parts[2])}` : fa;
 }

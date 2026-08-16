@@ -13,7 +13,7 @@ function startOfToday(): number {
 
 const DAY = 24 * 60 * 60 * 1000;
 
-/** مجموع فاکتورهای نهایی هر روز، از بازه تاریخ. بدون روزهای صفر */
+/** Total final invoices per day within a date range. No zero days */
 function revenueByDay(rows: typeof invoicesFixture, from: number): { date: string; total: number }[] {
   const byDay = new Map<string, number>();
   for (const iv of rows) {
@@ -64,8 +64,8 @@ export const dashboardHandlers = [
     const revenueGrowthPercent =
       prev30 > 0 ? Math.round(((current30 - prev30) / prev30) * 100) : null;
 
-    // هشدار: بیماران در انتظار تاییدیه بیمه با ثبت قدیمی‌تر از ۴۸ ساعت.
-    // mock از createdAt — بک‌اند واقعی باید از patient_status_history.changedAt استفاده کند
+    // Alert: patients waiting for insurance approval with a record older than 48 hours.
+    // The mock uses createdAt — the real backend should use patient_status_history.changedAt
     const insuranceOverdue = patientsFixture.filter((p) => {
       if (p.status !== "pending_insurance_approval") return false;
       return todayStart - new Date(p.createdAt).getTime() > 48 * 60 * 60 * 1000;

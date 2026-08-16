@@ -24,7 +24,7 @@ export const appointmentHandlers = [
 
     let rows = appointmentsFixture;
 
-    // منشی فقط نوبت‌های محل‌های کار خودش را می‌بیند (مثل بک‌اند)
+    // A secretary only sees appointments for their own workplaces (like the backend)
     const currentUser = decodeToken(getAccessToken());
     if (currentUser?.role !== "manager" && currentUser?.scopes?.length) {
       rows = rows.filter((a) => a.admissionPlaceId && currentUser.scopes!.includes(a.admissionPlaceId));
@@ -99,7 +99,7 @@ export const appointmentHandlers = [
       appt.appointmentTime = body.appointmentTime === null ? null : String(body.appointmentTime);
     }
     Object.assign(appt, body);
-    // همگام‌سازی فیلدهای بیمار با رکورد Patient متصل (شبیه بک‌اند)
+    // Sync patient fields with the linked Patient record (like the backend)
     if (appt.patientId) {
       const patient = patientsFixture.find((p) => p.id === appt.patientId);
       if (patient) {
