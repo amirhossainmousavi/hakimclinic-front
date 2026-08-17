@@ -139,6 +139,7 @@ Sidebar در موبایل به Drawer تبدیل می‌شود؛ جدول‌ها
 - Tailwind فقط با Logical Properties (`ms-*`/`me-*`, `ps-*`/`pe-*`, `start-*`/`end-*`)
 - آیکون‌های جهت‌دار با `rtl:` variant یا transform معکوس
 - تاریخ‌ها شمسی (jalali) در فرم‌ها و نمایش‌ها — توابع در `lib/jalali.ts`
+- فیلدهای شماره/کد (مثل شماره پرونده اختصاصی و شماره تماس‌های محل پذیرش) RTL و بدون آیکون هستند
 
 ---
 
@@ -155,18 +156,20 @@ Sidebar در موبایل به Drawer تبدیل می‌شود؛ جدول‌ها
 | صفحه | ماژول بک‌اند |
 |---|---|
 | داشبورد | `GET /dashboard` |
-| بیماران / پذیرش | `patients` + `files` (آپلود فایل پرونده) |
+| بیماران / پذیرش | `patients` + `files` (آپلود فایل پرونده) — شامل شماره پرونده اختصاصی `customFileNumber` |
 | تقویم نوبت‌دهی | `appointments` |
-| فاکتور | `invoices` |
+| فاکتور | `invoices` — انتخاب محل پذیرش برای فاکتور؛ snapshot محل در PDF |
 | بیمه‌ها | `insurances` |
 | خدمات / تعرفه‌ها | `services` / `tariffs` |
 | گزارش درآمد | `reports/revenue` |
 | هزینه‌ها | `expenses` |
-| منشی‌ها | `secretaries` + `admission-places` |
+| منشی‌ها | `secretaries` + `admission-places` — ویرایشگر چند شماره تماس `centerNumbers` |
 | اطلاعیه‌ها | `notifications` |
 | تنظیمات | پروفایل کاربر |
 
 دسترسی صفحه: نقش و دسترسی‌ها از `lib/roles.ts` (پس از decode توکن) خوانده می‌شود؛ بدون دسترسی → ریدایرکت به داشبورد.
+
+**نام نمایشی خدمات:** نام سرویس از `serviceName` خوانده می‌شود و در غیابش `serviceCode` — هلپر `serviceDisplayName()` در `features/services/types.ts` و در صفحه خدمات، کامبوباکس جست‌وجو، دیالوگ بیمار و دیالوگ فاکتور استفاده می‌شود.
 
 ---
 
