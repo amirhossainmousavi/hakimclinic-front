@@ -47,7 +47,7 @@ export default function PatientsPage() {
     }
   }, [searchParams]);
 
-  // Search only by national code — 1 second after typing stops
+  // Search by custom file number / national code — 1 second after typing stops
   useEffect(() => {
     const t = setTimeout(() => {
       setSearch(searchInput.trim());
@@ -94,7 +94,7 @@ export default function PatientsPage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Input
               icon={Search}
-              placeholder="جست‌وجو بر اساس کدملی…"
+              placeholder="جست‌وجو بر اساس شماره پرونده اختصاصی یا کدملی…"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="max-w-sm"
@@ -123,7 +123,7 @@ export default function PatientsPage() {
                 <table className="w-full text-sm">
                   <thead className="border-b bg-muted/40">
                     <tr>
-                      {["بیمار", "شماره پرونده", "کدملی", "محل پذیرش", "وضعیت", "تاریخ پذیرش"].map((h) => (
+                      {["بیمار", "شماره پرونده", "پرونده اختصاصی", "کدملی", "محل پذیرش", "وضعیت", "تاریخ پذیرش"].map((h) => (
                         <th key={h} className="px-4 py-3 text-start font-medium text-muted-foreground">{h}</th>
                       ))}
                     </tr>
@@ -146,6 +146,7 @@ export default function PatientsPage() {
                           </div>
                         </td>
                         <td className="px-4 py-3 tabular-nums">{p.fileNumber}</td>
+                        <td className="px-4 py-3 tabular-nums font-medium">{p.customFileNumber}</td>
                         <td className="px-4 py-3 tabular-nums">{p.nationalCode}</td>
                         <td className="px-4 py-3">{p.admissionPlaceName ?? "—"}</td>
                         <td className="px-4 py-3"><StatusBadge status={p.status} /></td>

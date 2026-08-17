@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useServicesList } from "@/features/services/hooks";
-import type { Service } from "@/features/services/types";
+import { serviceDisplayName, type Service } from "@/features/services/types";
 
 interface ServiceSearchComboboxProps {
   value: string;
@@ -36,8 +36,8 @@ export function ServiceSearchCombobox({
   // The value can be a service id or name; stored names may be shorter than the real names
   const selected = data
     ? data.items.find((s) => s.id === value) ??
-      data.items.find((s) => s.treatmentProcess === value) ??
-      data.items.find((s) => !!value && s.treatmentProcess.includes(value)) ??
+      data.items.find((s) => serviceDisplayName(s) === value) ??
+      data.items.find((s) => !!value && serviceDisplayName(s).includes(value)) ??
       null
     : null;
 
@@ -55,7 +55,7 @@ export function ServiceSearchCombobox({
         >
           <span className="min-w-0 break-words leading-snug">
             {selected
-              ? `${selected.serviceCode} — ${selected.treatmentProcess} (${selected.price.toLocaleString("en-US")} تومان)`
+              ? `${selected.serviceCode} — ${serviceDisplayName(selected)} (${selected.price.toLocaleString("en-US")} تومان)`
               : placeholder}
           </span>
           <ChevronDown className="size-4 shrink-0 opacity-50" />
@@ -98,7 +98,7 @@ export function ServiceSearchCombobox({
               >
                 <span className="min-w-0 break-words leading-snug">
                   <span className="font-medium">{s.serviceCode}</span>
-                  <span className="text-muted-foreground"> — {s.treatmentProcess}</span>
+                  <span className="text-muted-foreground"> — {serviceDisplayName(s)}</span>
                 </span>
                 <span className="shrink-0 text-xs text-muted-foreground">
                   {s.price.toLocaleString("en-US")} تومان

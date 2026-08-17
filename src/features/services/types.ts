@@ -3,11 +3,18 @@ export type ServiceType = "orthosis" | "prosthesis";
 export interface Service {
   id: string;
   serviceType: ServiceType;
-  treatmentProcess: string;
+  serviceName: string | null;
+  regionOrSection: string | null;
+  treatmentProcess: string | null;
   serviceCode: string;
   price: number;
   description: string | null;
   createdAt: string;
+}
+
+/** نام نمایشی خدمت — serviceName، و در غیابش کد خدمت */
+export function serviceDisplayName(svc: Pick<Service, "serviceName" | "serviceCode">): string {
+  return svc.serviceName?.trim() ? svc.serviceName : svc.serviceCode;
 }
 
 export interface ServiceListParams {
@@ -19,10 +26,12 @@ export interface ServiceListParams {
 
 export interface CreateServiceInput {
   serviceType: ServiceType;
-  treatmentProcess: string;
+  serviceName: string;
   serviceCode: string;
   price: number;
   description?: string;
+  regionOrSection?: string | null;
+  treatmentProcess?: string | null;
 }
 
 export interface UpdateServiceInput extends Partial<CreateServiceInput> {}

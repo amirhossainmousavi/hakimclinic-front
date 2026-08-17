@@ -18,7 +18,7 @@ export function PatientListItem({ patient, action }: PatientListItemProps) {
       <div className="min-w-0 flex-1 space-y-0.5">
         <p className="truncate text-sm font-semibold">{patient.fullName}</p>
         <p className="text-xs text-muted-foreground tabular-nums">
-          {patient.fileNumber} • {patient.nationalCode}
+          {patient.customFileNumber} • {patient.nationalCode}
         </p>
         <StatusBadge status={patient.status} />
       </div>

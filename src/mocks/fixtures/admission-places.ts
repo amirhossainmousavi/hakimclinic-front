@@ -8,6 +8,7 @@ function insuranceName(id: string): string {
 const PLACES: Array<{
   name: string;
   address: string;
+  centerNumbers: string[];
   description?: string;
   admissionType: AdmissionPlace["admissionType"];
   insuranceIds: string[];
@@ -15,6 +16,7 @@ const PLACES: Array<{
   {
     name: "درمانگاه حکیم",
     address: "تهران، خیابان ولیعصر، پلاک ۱۲۳",
+    centerNumbers: ["02166454321", "02122224444"],
     description: "درمانگاه تخصصی ارتوپدی فنی",
     admissionType: "both",
     insuranceIds: ["ins-1", "ins-2", "ins-5"],
@@ -22,12 +24,14 @@ const PLACES: Array<{
   {
     name: "بیمارستان خاتم",
     address: "تهران، خیابان شهید مطهری، بیمارستان خاتم",
+    centerNumbers: ["02188761234"],
     admissionType: "insured_only",
     insuranceIds: ["ins-1", "ins-3"],
   },
   {
     name: "کلینیک امید",
     address: "کرج، میدان امام حسین",
+    centerNumbers: [],
     admissionType: "free_only",
     insuranceIds: [],
   },
@@ -37,6 +41,8 @@ export const admissionPlacesFixture: AdmissionPlace[] = PLACES.map((p, i) => ({
   id: `place-${i + 1}`,
   name: p.name,
   address: p.address,
+  phone: p.centerNumbers[0] ?? null,
+  centerNumbers: p.centerNumbers,
   description: p.description ?? null,
   admissionType: p.admissionType,
   insurances: p.insuranceIds.map((insuranceId, j) => ({

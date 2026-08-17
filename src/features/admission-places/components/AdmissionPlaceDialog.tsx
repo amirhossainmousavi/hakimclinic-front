@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Building2, Loader2, MapPin, ShieldCheck, X } from "lucide-react";
+import { Building2, Loader2, MapPin, Phone, Plus, ShieldCheck, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -35,6 +35,7 @@ import { useInsurances } from "@/features/insurances/hooks";
 const schema = z.object({
   name: z.string().min(1, "نام محل پذیرش الزامی است"),
   address: z.string().min(1, "آدرس محل پذیرش الزامی است"),
+  centerNumbers: z.array(z.string()),
   description: z.string().optional(),
   admissionType: z.enum(["free_only", "insured_only", "both"]),
 });
@@ -70,10 +71,33 @@ export function AdmissionPlaceDialog({
     defaultValues: {
       name: "",
       address: "",
+      centerNumbers: [],
       description: "",
       admissionType: "both",
     },
   });
+
+  const centerNumbers = watch("centerNumbers");
+
+  const setPhone = (i: number, v: string) =>
+    setValue(
+      "centerNumbers",
+      centerNumbers.map((n, idx) => (idx === i ? v : n)),
+      { shouldValidate: true }
+    );
+
+  const addPhone = () => {
+    const next = [...centerNumbers, ""];
+    setValue("centerNumbers", next, { shouldValidate: true });
+    setTimeout(() => {
+      document.querySelector<HTMLInputElement>(`#ap-center-${next.length - 1}`)?.focus();
+    }, 0);
+  };
+
+  const removePhone = (i: number) =>
+    setValue("centerNumbers", centerNumbers.filter((_, idx) => idx !== i), {
+      shouldValidate: true,
+    });
 
   useEffect(() => {
     if (open) {
@@ -81,12 +105,18 @@ export function AdmissionPlaceDialog({
         reset({
           name: editing.name,
           address: editing.address,
+          centerNumbers:
+            editing.centerNumbers.length > 0
+              ? editing.centerNumbers
+              : editing.phone
+                ? [editing.phone]
+                : [""],
           description: editing.description ?? "",
           admissionType: editing.admissionType,
         });
         setInsuranceIds(editing.insurances.map((i) => i.insuranceId));
       } else {
-        reset({ name: "", address: "", description: "", admissionType: "both" });
+        reset({ name: "", address: "", centerNumbers: [""], description: "", admissionType: "both" });
         setInsuranceIds([]);
       }
     }
@@ -106,9 +136,13 @@ export function AdmissionPlaceDialog({
       toast.error("برای این نوع پذیرش حداقل یک بیمه انتخاب کنید");
       return;
     }
+    const numbers = (values.centerNumbers ?? [])
+      .map((n) => n.trim())
+      .filter(Boolean);
     const input = {
       name: values.name,
       address: values.address,
+      centerNumbers: numbers,
       description: values.description || undefined,
       admissionType: values.admissionType,
       insuranceIds: needsInsurance ? insuranceIds : [],
@@ -174,6 +208,44 @@ export function AdmissionPlaceDialog({
               {...register("address")}
             />
             {errors.address && <p className="text-xs text-destructive">{errors.address.message}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Label>شماره‌های تماس محل پذیرش</Label>
+            <div className="space-y-2">
+              {centerNumbers.map((_, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <Input
+                    id={`ap-center-${i}`}
+                    inputMode="tel"
+                    placeholder={`مثلاً ۰۲۱۶۶۴۵۴۳۲۱`}
+                    value={centerNumbers[i] ?? ""}
+                    onChange={(e) => setPhone(i, e.target.value)}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="shrink-0"
+                    onClick={() => removePhone(i)}
+                    disabled={centerNumbers.length === 1}
+                    aria-label="حذف شماره تماس"
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addPhone}
+                className="gap-1.5"
+              >
+                <Plus className="size-4" />
+                افزودن شماره تماس
+              </Button>
+            </div>
           </div>
 
           <div className="space-y-2">

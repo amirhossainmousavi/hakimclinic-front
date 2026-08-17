@@ -1,11 +1,13 @@
 import { faker } from "@faker-js/faker/locale/fa";
 import type { Invoice } from "@/features/invoices/types";
 import { patientsFixture } from "@/mocks/fixtures/patients";
+import { admissionPlacesFixture } from "@/mocks/fixtures/admission-places";
 import { servicesFixture } from "@/mocks/fixtures/services";
 import { tariffsFixture } from "@/mocks/fixtures/tariffs";
 
 function makeInvoice(index: number): Invoice {
   const patient = faker.helpers.arrayElement(patientsFixture);
+  const admissionPlace = faker.helpers.arrayElement(admissionPlacesFixture);
   const serviceCount = faker.number.int({ min: 1, max: 3 });
   const chosenServices = faker.helpers.arrayElements(servicesFixture, serviceCount);
 
@@ -17,7 +19,7 @@ function makeInvoice(index: number): Invoice {
     return {
       id: faker.string.uuid(),
       serviceId: svc.id,
-      serviceName: svc.treatmentProcess,
+      serviceName: svc.serviceName ?? svc.serviceCode,
       tariffId: svc.serviceType === "prosthesis" ? tariffsFixture[i % tariffsFixture.length].id : null,
       tariffName: svc.serviceType === "prosthesis" ? tariffsFixture[i % tariffsFixture.length].itemDescription : null,
       quantity,
@@ -38,6 +40,14 @@ function makeInvoice(index: number): Invoice {
     invoiceNumber: `INV-${String(20250101 + index)}`,
     patientId: patient.id,
     patientName: patient.fullName,
+    patientFileNumber: patient.fileNumber,
+    patientCustomFileNumber: patient.customFileNumber,
+    patientNationalCode: patient.nationalCode,
+    patientPhone: patient.phone,
+    admissionPlaceId: admissionPlace.id,
+    admissionPlaceName: admissionPlace.name,
+    admissionPlaceAddress: admissionPlace.address,
+    admissionPlacePhone: admissionPlace.phone,
     invoiceType,
     paymentType: faker.helpers.arrayElement(["card_to_card", "pos", "bank_transfer"] as const),
     totalAmount: Math.max(totalAmount - prepaidAmount, 0),

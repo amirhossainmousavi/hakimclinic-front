@@ -46,7 +46,7 @@ import { useCreatePatient, useUploadPatientFile } from "@/features/patients/hook
 import { useInsurances } from "@/features/insurances/hooks";
 import { useAdmissionPlaces } from "@/features/admission-places/hooks";
 import { ServiceSearchCombobox } from "@/features/services/components/service-search-combobox";
-import type { Service } from "@/features/services/types";
+import { serviceDisplayName, type Service } from "@/features/services/types";
 
 const schema = z
   .object({
@@ -54,6 +54,7 @@ const schema = z
     nationalCode: z.string().length(10, "کدملی باید ۱۰ رقم باشد"),
     phone: z.string().length(11, "شماره تلفن نامعتبر است"),
     birthDate: z.string().min(1, "تاریخ تولد الزامی است"),
+    customFileNumber: z.string().min(1, "شماره پرونده اختصاصی الزامی است"),
     admissionPlaceId: z.string().optional(),
     admissionType: z.enum(["free", "insured"]),
     insuranceId: z.string().optional(),
@@ -105,7 +106,7 @@ export function NewPatientDialog({
       {
         serviceId: s.id,
         serviceDate,
-        serviceName: s.treatmentProcess,
+        serviceName: serviceDisplayName(s),
         serviceCode: s.serviceCode,
         unitPrice: s.price,
       },
@@ -128,6 +129,7 @@ export function NewPatientDialog({
       nationalCode: "",
       phone: "",
       birthDate: "",
+      customFileNumber: "",
       admissionPlaceId: "",
       admissionType: "free",
       insuranceId: "",
@@ -168,6 +170,7 @@ export function NewPatientDialog({
       nationalCode: toEnglishDigits(values.nationalCode),
       phone: toEnglishDigits(values.phone),
       birthDate: values.birthDate,
+      customFileNumber: values.customFileNumber.trim(),
       admissionPlaceId: values.admissionPlaceId || undefined,
       admissionType: values.admissionType,
       insuranceId: values.insuranceId || undefined,
@@ -248,6 +251,17 @@ export function NewPatientDialog({
                   />
                   {errors.phone && (
                     <p className="text-xs text-destructive">{errors.phone.message}</p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="n-customFileNumber">شماره پرونده اختصاصی</Label>
+                  <Input
+                    id="n-customFileNumber"
+                    placeholder="مثلاً PF-۱۰۰۱"
+                    {...register("customFileNumber")}
+                  />
+                  {errors.customFileNumber && (
+                    <p className="text-xs text-destructive">{errors.customFileNumber.message}</p>
                   )}
                 </div>
                 <div className="space-y-2">

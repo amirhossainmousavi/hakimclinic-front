@@ -34,8 +34,10 @@ import { cn } from "@/lib/utils";
 import { toJalaliString } from "@/lib/jalali";
 import { usePatientsList, usePatientServices } from "@/features/patients/hooks";
 import { useCreateInvoice } from "@/features/invoices/hooks";
+import { useAdmissionPlaces } from "@/features/admission-places/hooks";
 import { PAYMENT_TYPE_LABELS, type InvoiceType, type PaymentType } from "@/features/invoices/types";
 import type { Patient, PatientService } from "@/features/patients/types";
+import { serviceDisplayName } from "@/features/services/types";
 import { formatToman } from "@/lib/utils";
 
 type Stage = "patient" | "day" | "services";
@@ -57,6 +59,7 @@ export function NewInvoiceDialog({
 }) {
   const [stage, setStage] = useState<Stage>("patient");
   const [patient, setPatient] = useState<Patient | null>(null);
+  const [admissionPlaceId, setAdmissionPlaceId] = useState<string | null>(null);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [invoiceType, setInvoiceType] = useState<InvoiceType>("final");
   const [paymentType, setPaymentType] = useState<PaymentType>("pos");
@@ -108,10 +111,12 @@ export function NewInvoiceDialog({
   }, [patientServices, selectedDay]);
 
   const createMutation = useCreateInvoice();
+  const { data: admissionPlaces } = useAdmissionPlaces();
 
   const reset = () => {
     setStage("patient");
     setPatient(null);
+    setAdmissionPlaceId(null);
     setSelectedDay(null);
     setInvoiceType("final");
     setPaymentType("pos");
@@ -168,10 +173,11 @@ export function NewInvoiceDialog({
     patient !== null &&
     selectedDay !== null &&
     dayServicesCount > 0 &&
+    !!admissionPlaceId &&
     !prepayExceeds;
 
   const handleSubmit = async () => {
-    if (!patient || !selectedDay || dayServicesCount === 0 || prepayExceeds) return;
+    if (!patient || !selectedDay || dayServicesCount === 0 || prepayExceeds || !admissionPlaceId) return;
     const items = dayServices.map((ps) => ({
       serviceId: ps.serviceId,
       quantity: 1,
@@ -180,6 +186,7 @@ export function NewInvoiceDialog({
     }));
     await createMutation.mutateAsync({
       patientId: patient.id,
+      admissionPlaceId,
       invoiceType,
       paymentType,
       items,
@@ -218,8 +225,8 @@ export function NewInvoiceDialog({
         onOpenChange(o);
       }}
     >
-      <DialogContent className="max-h-[92dvh] overflow-y-auto sm:max-w-2xl">
-        <DialogHeader>
+      <DialogContent className="flex max-h-[92dvh] flex-col overflow-hidden sm:overflow-y-hidden sm:max-w-2xl">
+        <DialogHeader className="shrink-0">
           <DialogTitle>فاکتور جدید</DialogTitle>
           <DialogDescription>
             {stage === "patient"
@@ -232,7 +239,7 @@ export function NewInvoiceDialog({
 
         {/* Step 1: Select patient */}
         {stage === "patient" && (
-          <div className="space-y-4">
+          <div className="min-h-0 flex-1 overflow-y-auto space-y-4">
             <div className="space-y-2">
               <Label>جست‌وجوی بیمار</Label>
               <Popover open={searchOpen} onOpenChange={setSearchOpen}>
@@ -306,7 +313,7 @@ export function NewInvoiceDialog({
 
         {/* Step 2: Select day */}
         {stage === "day" && (
-          <div className="space-y-4">
+          <div className="min-h-0 flex-1 overflow-y-auto space-y-4">
             <div className="flex items-center justify-between gap-2 rounded-xl border bg-muted/40 px-3 py-2 text-sm">
               <span className="flex items-center gap-2 font-medium">
                 <User className="size-4 text-primary" />
@@ -414,7 +421,7 @@ export function NewInvoiceDialog({
 
         {/* Step 3: Day services + invoice settings */}
         {stage === "services" && (
-          <div className="space-y-4">
+          <div className="min-h-0 flex-1 overflow-y-auto space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label>نوع فاکتور</Label>
@@ -449,6 +456,28 @@ export function NewInvoiceDialog({
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>محل پذیرش / مرکز درمانی (برای فاکتور)</Label>
+              <Select
+                value={admissionPlaceId ?? ""}
+                onValueChange={(v) => setAdmissionPlaceId(v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="انتخاب محل پذیرش" />
+                </SelectTrigger>
+                <SelectContent>
+                  {admissionPlaces?.map((pl) => (
+                    <SelectItem key={pl.id} value={pl.id}>
+                      {pl.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {!admissionPlaceId && (
+                <p className="text-xs text-destructive">انتخاب محل پذیرش برای فاکتور الزامی است</p>
+              )}
             </div>
 
             {invoiceType === "pro_forma" && (
@@ -499,7 +528,7 @@ export function NewInvoiceDialog({
                           <Stethoscope className="size-5" />
                         </span>
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold">{ps.service.treatmentProcess}</p>
+                          <p className="whitespace-normal break-words text-sm font-semibold">{serviceDisplayName(ps.service)}</p>
                           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                             <span className="inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 tabular-nums">
                               <Hash className="size-3" />

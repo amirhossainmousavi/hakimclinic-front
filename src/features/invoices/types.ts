@@ -18,6 +18,14 @@ export interface Invoice {
   invoiceNumber: string;
   patientId: string;
   patientName: string;
+  patientFileNumber: string | null;
+  patientCustomFileNumber: string | null;
+  patientNationalCode: string | null;
+  patientPhone: string | null;
+  admissionPlaceId?: string | null;
+  admissionPlaceName: string | null;
+  admissionPlaceAddress: string | null;
+  admissionPlacePhone: string | null;
   invoiceType: InvoiceType;
   paymentType: PaymentType;
   totalAmount: number;
@@ -34,6 +42,7 @@ export interface Invoice {
 
 export interface CreateInvoiceInput {
   patientId: string;
+  admissionPlaceId?: string | null;
   invoiceType: InvoiceType;
   paymentType: PaymentType;
   items: Array<{

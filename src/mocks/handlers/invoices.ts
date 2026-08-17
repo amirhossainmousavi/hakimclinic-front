@@ -1,6 +1,7 @@
 import { delay, http, HttpResponse } from "msw";
 import { invoicesFixture } from "@/mocks/fixtures/invoices";
 import { patientsFixture } from "@/mocks/fixtures/patients";
+import { admissionPlacesFixture } from "@/mocks/fixtures/admission-places";
 import { servicesFixture } from "@/mocks/fixtures/services";
 import type { CreateInvoiceInput, InvoiceItem } from "@/features/invoices/types";
 
@@ -42,9 +43,12 @@ export const invoiceHandlers = [
     const body = (await request.json()) as CreateInvoiceInput;
     if (!body.patientId) return error("VALIDATION_ERROR", "بیمار الزامی است", 400);
     if (!body.items?.length) return error("VALIDATION_ERROR", "حداقل یک ردیف خدمت الزامی است", 400);
+    if (!body.admissionPlaceId) return error("VALIDATION_ERROR", "انتخاب محل پذیرش الزامی است", 400);
 
     const patient = patientsFixture.find((p) => p.id === body.patientId);
     if (!patient) return error("PATIENT_NOT_FOUND", "بیمار مورد نظر یافت نشد", 404);
+
+    const admissionPlace = admissionPlacesFixture.find((pl) => pl.id === body.admissionPlaceId);
 
     const items: InvoiceItem[] = body.items.map((raw) => {
       const svc = servicesFixture.find((s) => s.id === raw.serviceId)!;
@@ -52,7 +56,7 @@ export const invoiceHandlers = [
       return {
         id: crypto.randomUUID(),
         serviceId: svc.id,
-        serviceName: svc.treatmentProcess,
+        serviceName: svc.serviceName ?? svc.serviceCode,
         tariffId: null,
         tariffName: null,
         quantity: raw.quantity,
@@ -74,6 +78,14 @@ export const invoiceHandlers = [
       invoiceNumber: `INV-${Date.now()}`,
       patientId: patient.id,
       patientName: patient.fullName,
+      patientFileNumber: patient.fileNumber,
+      patientCustomFileNumber: patient.customFileNumber,
+      patientNationalCode: patient.nationalCode,
+      patientPhone: patient.phone,
+      admissionPlaceId: body.admissionPlaceId,
+      admissionPlaceName: admissionPlace?.name ?? null,
+      admissionPlaceAddress: admissionPlace?.address ?? null,
+      admissionPlacePhone: admissionPlace?.phone ?? null,
       invoiceType: body.invoiceType,
       paymentType: body.paymentType,
       totalAmount,
@@ -102,7 +114,7 @@ export const invoiceHandlers = [
       return {
         id: crypto.randomUUID(),
         serviceId: svc.id,
-        serviceName: svc.treatmentProcess,
+        serviceName: svc.serviceName ?? svc.serviceCode,
         tariffId: null,
         tariffName: null,
         quantity: raw.quantity,

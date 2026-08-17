@@ -14,6 +14,7 @@ export interface Patient {
   phone: string;
   birthDate: string | null;
   fileNumber: string;
+  customFileNumber: string;
   admissionPlaceId: string | null;
   admissionPlaceName: string | null;
   /** User id that admitted the patient (from the token in the mock; from sub in the backend) */
@@ -40,6 +41,7 @@ export interface CreatePatientInput {
   fullName: string;
   phone: string;
   birthDate: string;
+  customFileNumber: string;
   admissionPlaceId?: string;
   admissionType: AdmissionType;
   insuranceId?: string;
@@ -53,6 +55,7 @@ export interface UpdatePatientInput {
   fullName?: string;
   phone?: string;
   birthDate?: string | null;
+  customFileNumber?: string;
   admissionPlaceId?: string | null;
   admissionType?: AdmissionType;
   insuranceId?: string | null;
@@ -71,7 +74,9 @@ export interface PatientService {
   service: {
     id: string;
     serviceType: "orthosis" | "prosthesis";
-    treatmentProcess: string;
+    serviceName: string | null;
+    treatmentProcess: string | null;
+    regionOrSection: string | null;
     serviceCode: string;
     price: number;
     description: string | null;

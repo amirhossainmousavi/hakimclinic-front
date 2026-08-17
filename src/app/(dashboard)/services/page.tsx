@@ -20,12 +20,12 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCreateService, useDeleteService, useServicesList, useUpdateService } from "@/features/services/hooks";
-import { SERVICE_TYPE_LABELS, type Service, type ServiceType } from "@/features/services/types";
+import { SERVICE_TYPE_LABELS, serviceDisplayName, type Service, type ServiceType } from "@/features/services/types";
 import { formatToman } from "@/lib/utils";
 
 const serviceSchema = z.object({
   serviceType: z.enum(["orthosis", "prosthesis"], { message: "نوع خدمت را انتخاب کنید" }),
-  treatmentProcess: z.string().min(3, "نام خدمت باید حداقل ۳ کاراکتر باشد"),
+  serviceName: z.string().min(3, "نام خدمت باید حداقل ۳ کاراکتر باشد"),
   serviceCode: z.string().min(2, "کد خدمت الزامی است"),
   price: z.coerce.number().min(1, "قیمت الزامی است"),
   description: z.string().optional(),
@@ -35,7 +35,7 @@ type ServiceForm = z.infer<typeof serviceSchema>;
 
 const EMPTY_FORM: ServiceForm = {
   serviceType: "orthosis",
-  treatmentProcess: "",
+  serviceName: "",
   serviceCode: "",
   price: 0,
   description: "",
@@ -105,7 +105,7 @@ function ServicesPageContent() {
     setEditing(svc);
     reset({
       serviceType: svc.serviceType,
-      treatmentProcess: svc.treatmentProcess,
+      serviceName: svc.serviceName ?? "",
       serviceCode: svc.serviceCode,
       price: svc.price,
       description: svc.description ?? "",
@@ -192,7 +192,7 @@ function ServicesPageContent() {
                     {data.items.map((svc) => (
                       <tr key={svc.id} className="border-b last:border-0 hover:bg-muted/30">
                         <td className="px-4 py-3 font-medium tabular-nums">{svc.serviceCode}</td>
-                        <td className="px-4 py-3">{svc.treatmentProcess}</td>
+                        <td className="px-4 py-3">{serviceDisplayName(svc)}</td>
                         <td className="px-4 py-3">
                           <Badge variant={svc.serviceType === "orthosis" ? "secondary" : "outline"}>
                             {SERVICE_TYPE_LABELS[svc.serviceType]}
@@ -222,7 +222,7 @@ function ServicesPageContent() {
                   <div key={svc.id} className="rounded-2xl border bg-card p-4">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <p className="font-medium">{svc.treatmentProcess}</p>
+                        <p className="font-medium">{serviceDisplayName(svc)}</p>
                         <p className="mt-0.5 text-xs text-muted-foreground tabular-nums">{svc.serviceCode}</p>
                       </div>
                       <Badge variant={svc.serviceType === "orthosis" ? "secondary" : "outline"}>
@@ -265,7 +265,7 @@ function ServicesPageContent() {
         title="حذف خدمت"
         description={
           deleteTarget
-            ? `آیا مطمئن هستید خدمت «${deleteTarget.treatmentProcess}» از فهرست خدمات حذف شود؟`
+            ? `آیا مطمئن هستید خدمت «${serviceDisplayName(deleteTarget)}» از فهرست خدمات حذف شود؟`
             : undefined
         }
         confirmLabel="حذف"
@@ -303,9 +303,9 @@ function ServicesPageContent() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="treatmentProcess">نام خدمت</Label>
-              <Input id="treatmentProcess" icon={Stethoscope} placeholder="مثلاً ساخت زانوبند طبی" {...register("treatmentProcess")} />
-              {errors.treatmentProcess && <p className="text-xs text-destructive">{errors.treatmentProcess.message}</p>}
+              <Label htmlFor="serviceName">نام خدمت</Label>
+              <Input id="serviceName" icon={Stethoscope} placeholder="مثلاً ساخت زانوبند طبی" {...register("serviceName")} />
+              {errors.serviceName && <p className="text-xs text-destructive">{errors.serviceName.message}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="price">قیمت (تومان)</Label>

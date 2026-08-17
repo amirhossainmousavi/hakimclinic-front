@@ -25,6 +25,7 @@ const schema = z.object({
   nationalCode: z.string().length(10, "کدملی باید ۱۰ رقم باشد"),
   phone: z.string().length(11, "شماره تلفن نامعتبر است"),
   birthDate: z.string().min(1, "تاریخ تولد الزامی است"),
+  customFileNumber: z.string().min(1, "شماره پرونده اختصاصی الزامی است"),
   admissionType: z.enum(["free", "insured"]),
   admissionPlaceId: z.string().optional(),
   appointmentHour: z.string().optional(),
@@ -64,6 +65,7 @@ export function NewAppointmentForm({
       nationalCode: "",
       phone: "",
       birthDate: "",
+      customFileNumber: "",
       admissionType: "free",
       admissionPlaceId: "",
       appointmentHour: "",
@@ -85,6 +87,7 @@ export function NewAppointmentForm({
       nationalCode: toEnglishDigits(values.nationalCode),
       phone: toEnglishDigits(values.phone),
       birthDate: values.birthDate,
+      customFileNumber: values.customFileNumber.trim(),
       admissionType: values.admissionType,
       admissionPlaceId,
     });
@@ -161,6 +164,18 @@ export function NewAppointmentForm({
             <p className="text-xs text-destructive">{errors.birthDate.message}</p>
           )}
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="customFileNumber">شماره پرونده اختصاصی</Label>
+        <Input
+          id="customFileNumber"
+          placeholder="مثلاً PF-۱۰۰۱"
+          {...register("customFileNumber")}
+        />
+        {errors.customFileNumber && (
+          <p className="text-xs text-destructive">{errors.customFileNumber.message}</p>
+        )}
       </div>
 
       {availablePlaces.length > 0 && (

@@ -10,6 +10,7 @@ import {
   CloudUpload,
   CreditCard,
   FileText,
+  FolderOpen,
   Image as ImageIcon,
   Loader2,
   Phone,
@@ -60,13 +61,14 @@ import {
 import { useInsurances } from "@/features/insurances/hooks";
 import { useAdmissionPlaces } from "@/features/admission-places/hooks";
 import { ServiceSearchCombobox } from "@/features/services/components/service-search-combobox";
-import type { Service } from "@/features/services/types";
+import { serviceDisplayName, type Service } from "@/features/services/types";
 
 const editSchema = z.object({
   fullName: z.string().min(3, "نام بیمار الزامی است"),
   nationalCode: z.string().length(10, "کدملی باید ۱۰ رقم باشد"),
   phone: z.string().length(11, "شماره تلفن نامعتبر است"),
   birthDate: z.string().min(1, "تاریخ تولد الزامی است"),
+  customFileNumber: z.string().min(1, "شماره پرونده اختصاصی الزامی است"),
   suggestedDoctor: z.string().optional(),
   admissionPlaceId: z.string().optional(),
   insuranceId: z.string().optional(),
@@ -163,6 +165,7 @@ export function PatientDetailDialog({
         nationalCode: patient.nationalCode,
         phone: patient.phone,
         birthDate: patient.birthDate?.slice(0, 10) ?? "",
+        customFileNumber: patient.customFileNumber,
         suggestedDoctor: patient.suggestedDoctor ?? "",
         admissionPlaceId: patient.admissionPlaceId ?? "",
         insuranceId: patient.insuranceId ?? "",
@@ -184,6 +187,7 @@ export function PatientDetailDialog({
         nationalCode: toEnglishDigits(values.nationalCode),
         phone: toEnglishDigits(values.phone),
         birthDate: values.birthDate || null,
+        customFileNumber: values.customFileNumber.trim(),
         suggestedDoctor: values.suggestedDoctor || null,
         admissionPlaceId: values.admissionPlaceId || null,
         insuranceId: values.insuranceId || null,
@@ -239,6 +243,11 @@ export function PatientDetailDialog({
               <div className="grid gap-3 sm:grid-cols-2">
                 <Field icon={User} label="نام کامل" value={patient.fullName} />
                 <Field icon={FileText} label="شماره پرونده" value={patient.fileNumber} />
+                <Field
+                  icon={FolderOpen}
+                  label="شماره پرونده اختصاصی"
+                  value={patient.customFileNumber}
+                />
                 <Field icon={CreditCard} label="کدملی" value={patient.nationalCode} />
                 <Field icon={Phone} label="تلفن" value={patient.phone} />
                 <Field
@@ -338,6 +347,16 @@ export function PatientDetailDialog({
                     />
                     {errors.birthDate && (
                       <p className="text-xs text-destructive">{errors.birthDate.message}</p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="p-customFileNumber">شماره پرونده اختصاصی</Label>
+                    <Input
+                      id="p-customFileNumber"
+                      {...register("customFileNumber")}
+                    />
+                    {errors.customFileNumber && (
+                      <p className="text-xs text-destructive">{errors.customFileNumber.message}</p>
                     )}
                   </div>
                   <div className="space-y-2">
@@ -489,7 +508,7 @@ export function PatientDetailDialog({
                           </div>
                           <div className="min-w-0">
                             <p className="break-words text-sm font-medium">
-                              {ps.service.treatmentProcess}
+                              {serviceDisplayName(ps.service)}
                             </p>
                             <p className="text-[11px] text-muted-foreground">
                               {ps.service.serviceCode} ·{" "}

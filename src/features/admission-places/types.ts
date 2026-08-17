@@ -6,6 +6,8 @@ export interface AdmissionPlace {
   id: string;
   name: string;
   address: string;
+  phone: string | null;
+  centerNumbers: string[];
   description: string | null;
   admissionType: AdmissionPlaceType;
   insurances: Array<{
@@ -19,6 +21,8 @@ export interface AdmissionPlace {
 export interface CreateAdmissionPlaceInput {
   name: string;
   address: string;
+  phone?: string | null;
+  centerNumbers?: string[];
   description?: string;
   admissionType: AdmissionPlaceType;
   insuranceIds?: string[];

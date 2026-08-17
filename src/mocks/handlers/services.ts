@@ -37,7 +37,7 @@ export const serviceHandlers = [
     await delay(LATENCY());
     const body = (await request.json()) as Record<string, unknown>;
     const missing: Record<string, string> = {};
-    for (const key of ["serviceType", "treatmentProcess", "serviceCode", "price"]) {
+    for (const key of ["serviceType", "serviceName", "serviceCode", "price"]) {
       if (body[key] === undefined || body[key] === null || body[key] === "") {
         missing[key] = "این فیلد الزامی است";
       }
@@ -55,7 +55,9 @@ export const serviceHandlers = [
     const newService = {
       id: crypto.randomUUID(),
       serviceType: body.serviceType as never,
-      treatmentProcess: String(body.treatmentProcess),
+      serviceName: String(body.serviceName),
+      regionOrSection: null,
+      treatmentProcess: null,
       serviceCode: String(body.serviceCode),
       price: Number(body.price),
       description: (body.description as string) ?? null,

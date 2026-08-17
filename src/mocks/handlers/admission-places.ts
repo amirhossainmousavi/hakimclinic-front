@@ -17,6 +17,8 @@ interface BuildPlaceInput {
   id?: string;
   name: string;
   address: string;
+  phone?: string | null;
+  centerNumbers?: string[];
   description: string | null;
   admissionType: AdmissionPlaceType;
   insuranceIds?: string[];
@@ -26,11 +28,21 @@ interface BuildPlaceInput {
 function buildPlace(partial: BuildPlaceInput): AdmissionPlace {
   const place = admissionPlacesFixture.find((p) => p.id === partial.id);
   const insuranceIds = partial.insuranceIds ?? place?.insurances.map((i) => i.insuranceId) ?? [];
+  const centerNumbers =
+    partial.centerNumbers !== undefined
+      ? partial.centerNumbers
+      : place?.centerNumbers.length
+        ? place.centerNumbers
+        : partial.phone
+          ? [partial.phone]
+          : [];
 
   return {
     id: partial.id ?? crypto.randomUUID(),
     name: partial.name,
     address: partial.address,
+    phone: centerNumbers[0] ?? null,
+    centerNumbers,
     description: partial.description ?? null,
     admissionType: partial.admissionType,
     insurances: insuranceIds.map((insuranceId, j) => {
@@ -65,6 +77,8 @@ export const admissionPlaceHandlers = [
     const place = buildPlace({
       name: body.name.trim(),
       address: body.address.trim(),
+      phone: body.phone ?? null,
+      centerNumbers: body.centerNumbers ?? [],
       description: body.description ?? null,
       admissionType: body.admissionType,
       insuranceIds: body.insuranceIds ?? [],
@@ -83,6 +97,8 @@ export const admissionPlaceHandlers = [
       id: prev.id,
       name: body.name ?? prev.name,
       address: body.address ?? prev.address,
+      phone: body.phone !== undefined ? body.phone : prev.phone,
+      centerNumbers: body.centerNumbers !== undefined ? body.centerNumbers : prev.centerNumbers,
       description: body.description ?? prev.description,
       admissionType: body.admissionType ?? prev.admissionType,
       insuranceIds: body.insuranceIds,

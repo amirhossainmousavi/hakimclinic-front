@@ -74,7 +74,12 @@ export const patientHandlers = [
     if (status) rows = rows.filter((p) => p.status === status);
     if (placeId) rows = rows.filter((p) => p.admissionPlaceId === placeId);
     if (search) {
-      rows = rows.filter((p) => p.nationalCode.includes(search) || p.fullName.includes(search));
+      rows = rows.filter(
+        (p) =>
+          p.customFileNumber.includes(search) ||
+          p.nationalCode.includes(search) ||
+          p.fullName.includes(search)
+      );
     }
 
     rows = [...rows].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -96,7 +101,7 @@ export const patientHandlers = [
     const currentUser = decodeToken(getAccessToken());
 
     const missing: Record<string, string> = {};
-    for (const key of ["nationalCode", "fullName", "phone", "birthDate", "admissionType"]) {
+    for (const key of ["nationalCode", "fullName", "phone", "birthDate", "customFileNumber", "admissionType"]) {
       if (!body[key]) {
         missing[key] = "این فیلد الزامی است";
       }
@@ -120,6 +125,7 @@ export const patientHandlers = [
       phone: String(body.phone),
       birthDate: (body.birthDate as string) ?? null,
       fileNumber: String(1000 + patientsFixture.length),
+      customFileNumber: String(body.customFileNumber ?? ""),
       admissionPlaceId: admissionPlace.id,
       admissionPlaceName: admissionPlace.name,
       admittedByUserId: currentUser?.sub ?? null,

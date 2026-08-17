@@ -38,6 +38,7 @@ function makePatient(index: number): Patient {
     phone: `09${faker.string.numeric(9)}`,
     birthDate: faker.date.birthdate({ min: 18, max: 80, mode: "age" }).toISOString().slice(0, 10),
     fileNumber: String(1000 + index),
+    customFileNumber: `PF-${String(1000 + index)}`,
     admissionPlaceId: place.id,
     admissionPlaceName: place.name,
     admittedByUserId: faker.helpers.arrayElement(ADMITTERS),

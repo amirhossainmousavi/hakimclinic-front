@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Building2, Loader2, MapPin, Pencil, Plus, ShieldCheck, Trash2 } from "lucide-react";
+import { Building2, Loader2, MapPin, Pencil, Phone, Plus, ShieldCheck, Trash2 } from "lucide-react";
 import { RoleGuard } from "@/components/auth/RoleGuard";
 import { PageHeader } from "@/components/design-system/PageHeader";
 import { ErrorState } from "@/components/design-system/ErrorState";
@@ -109,6 +109,25 @@ function AdmissionPlacesContent() {
                     {ADMISSION_PLACE_TYPE_LABELS[place.admissionType]}
                   </Badge>
                 </div>
+
+                {(place.centerNumbers.length > 0 || place.phone) && (
+                  <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Phone className="size-3 shrink-0" />
+                    <span className="flex flex-wrap gap-x-1.5" dir="ltr">
+                      {(place.centerNumbers.length > 0
+                        ? place.centerNumbers
+                        : place.phone
+                          ? [place.phone]
+                          : []
+                      ).map((n, i) => (
+                        <span key={i}>
+                          {i > 0 && <span className="mx-0.5 text-muted-foreground/60">·</span>}
+                          {n}
+                        </span>
+                      ))}
+                    </span>
+                  </p>
+                )}
 
                 {place.description && (
                   <p className="text-xs text-muted-foreground">{place.description}</p>
